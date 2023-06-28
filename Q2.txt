@@ -1,0 +1,320 @@
+// Q2.cpp : This file contains the 'main' function. Program execution begins and ends there.
+//
+
+#include <iostream>
+using namespace std;
+
+class AdjMatrix
+{
+private:
+	int** ARR;
+	int** ARR2;
+	int M, N;
+protected:
+	bool symetryCheck;
+	bool reflexiveCheck;
+	bool anti_symtricCheck;
+	bool transitiveCheck;
+
+public:
+
+	AdjMatrix()//constructer
+	{
+		int M, N = 0;
+		symetryCheck = false;
+		reflexiveCheck = false;
+		anti_symtricCheck = false;
+		transitiveCheck = false;
+	}
+
+	AdjMatrix(int rows, int cols)
+	{
+		N = rows, M = cols;
+		ARR = new int* [N + 1];
+		//for matrix
+		for (int i = 0; i < N; i++)
+		{
+			ARR[i] = new int[N + 1];
+		}
+		for (int i = 0; i < N; i++)//inital entries in the array will be of '0'
+		{
+			for (int j = 0; j < N; j++)
+			{
+				ARR[i][j] = 0; //crating a parametrized construter 
+			}
+		}
+
+		ARR2 = new int* [N + 1];
+		//for list
+		for (int i = 0; i < N; i++)
+		{
+			ARR2[i] = new int[N + 1];
+		}
+		for (int i = 0; i < N; i++)//inital entries in the array will be of '0'
+		{
+			for (int j = 0; j < N; j++)
+			{
+				ARR2[i][j] = 0; //crating a parametrized construter 
+			}
+		}
+	}
+
+	void addVertices()
+	{
+		int set1var = 0, set2var = 0, count = 0;
+		int choice = 0;
+		jump:
+		cout << "\n********GRAPH SELECTION********\n";
+		cout << "1.Directed Graphs\n2.Undirected Graphs\n\nPlease enter your choice: "; cin >> choice;
+		switch (choice)
+		{
+		case 1:
+			while (count != M)
+			{
+				cout << "Enter the set " << count << " var1: "; cin >> set1var;
+				if (set1var <= 0 || set1var > N)
+				{
+					while (set1var <= 0 || set1var > N)
+					{
+						cout << "\nYOU HAVE ENTERED A WRONG VALUE\n";
+						cout << "Enter the set " << count << " var1: "; cin >> set1var;
+					}
+				}
+				cout << "Enter the set " << count << " var2: "; cin >> set2var;
+				if (set2var <= 0 || set2var > N)
+				{
+					while (set2var <= 0 || set2var > N)
+					{
+						cout << "\nYOU HAVE ENTERED A WRONG VALUE\n";
+						cout << "Enter the set " << count << " var2: "; cin >> set2var;
+					}
+				}
+				ARR[set1var - 1][set2var - 1] = 1;// ARR[set2var - 1][set1var - 1] = 1;
+				count++;
+			}
+			break;
+
+		case 2:
+			while (count != M)
+			{
+				cout << "Enter the set " << count << " var1: "; cin >> set1var;
+				if (set1var <= 0 || set1var > N)
+				{
+					while (set1var <= 0 || set1var > N)
+					{
+						cout << "\nYOU HAVE ENTERED A WRONG VALUE\n";
+						cout << "Enter the set " << count << " var1: "; cin >> set1var;
+					}
+				}
+				cout << "Enter the set " << count << " var2: "; cin >> set2var;
+				if (set2var <= 0 || set2var > N)
+				{
+					while (set2var <= 0 || set2var > N)
+					{
+						cout << "\nYOU HAVE ENTERED A WRONG VALUE\n";
+						cout << "Enter the set " << count << " var2: "; cin >> set2var;
+					}
+				}
+				ARR[set1var - 1][set2var - 1] = 1; ARR[set2var - 1][set1var - 1] = 1;
+				count++;
+			}
+			break;
+
+		default:
+			cout << "\nYOU'VE SELECTED A WRONG SELECTION!!\n\nPLEASE TRY AGAIN\n";
+			goto jump;
+			break;
+		}
+	}
+
+	void dispADJ_Matrix()
+	{
+		cout << "\nAdjecency Matrix:\n";
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < M; j++)
+			{
+				cout << ARR[i][j] << " ";
+				//converting it to list too
+				if (ARR[i][j] == 1)
+				{
+					ARR2[i][j] = j + 1;
+				}
+			}
+			cout << "\n";
+		}
+	}
+
+	void disp_list()
+	{
+		cout << "\nAdjecency List:\n";
+		for (int i = 0; i < N; i++)
+		{
+			cout << i + 1 << "===>{  ";
+			for (int j = 0; j < M; j++)
+			{
+				if (ARR2[i][j] != 0)
+				{
+					cout << ARR2[i][j] << "  ";
+				}
+			}
+			cout << "}";
+			cout << "\n\n";
+		}
+	}
+
+	int getN()
+	{
+		int n = N + 1;
+		return n;
+	}
+
+	void symtric()
+	{
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				if (ARR[i][j] != ARR[j][i])//transpose
+				{
+					symetryCheck = true;
+					break;
+				}
+			}
+		}
+	}
+
+	void reflixive()
+	{
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N;)
+			{
+				if (ARR[i][j] == ARR[i][j + 1])
+				{
+					reflexiveCheck = true;
+					break;
+				}
+				else
+				{
+					j++;
+				}
+			}
+		}
+	}
+
+	void AntiSymetric()
+	{
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+			{
+				if (ARR[i][j] != (ARR[j][i] * -1))
+				{
+					anti_symtricCheck = false;
+				}
+				else
+				{
+					anti_symtricCheck = true;
+				}
+			}
+		}
+	}
+
+	void transitive()
+	{
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = i; j < N; j++)
+			{
+				if (ARR[i][j] == 1)
+				{
+					for (int k = j; k < N; k++)
+					{
+						if (ARR[j][k] == 1 && ARR[k][i] == 1)
+							transitiveCheck = true;
+					}
+				}
+			}
+		}
+	}
+
+	void allCheckINFO()
+	{
+		transitive(); AntiSymetric(); symtric(); reflixive();
+		cout << "************ALL RELATIONS INFORMATION************\n";
+		if (transitiveCheck == true)
+		{
+			cout << "\nThe relation you entered holds a transitive relation\n";
+		}
+		else
+		{
+			cout << "\nThe relation you entered does not hold a transitive relation\n";
+		}
+
+		if (symetryCheck == true)
+		{
+			cout << "\nThe relation you entered holds a symteric relation\n";
+		}
+		else
+		{
+			cout << "\nThe relation you entered does not hold a symteric relation\n";
+		}
+
+		if (anti_symtricCheck == true)
+		{
+			cout << "\nThe relation you entered holds a anti-symetric relation\n";
+		}
+		else
+		{
+			cout << "\nThe relation you entered does not hold a anti-symetric relation\n";
+		}
+
+		if (reflexiveCheck == true)
+		{
+			cout << "\nThe relation you entered holds a reflexive relation\n";
+		}
+		else
+		{
+			cout << "\nThe relation you entered does not hold a reflexive relation\n";
+		}
+
+		if (reflexiveCheck == true && symetryCheck == true)
+		{
+			cout << "\nThe relation you entered holds a reflexive relation and a symmetric relation\n";
+		}
+
+		if (anti_symtricCheck == true && symetryCheck == true)
+		{
+			cout << "\nThe relation you entered holds a anti-symetric relation and symmetric relation\n";
+		}
+	}
+
+	~AdjMatrix()//destructer
+	{
+		for (int i = 0; i <= N; i++)
+		{
+			delete[] ARR[i];
+		}
+		delete[] ARR;
+	}
+};
+
+
+int main()
+{
+	int m = 0, n = 0;
+	cout << "***N vertices 1 to N and M edges in form of 2D Array***\n\n";
+	cout << "\nN = number of elements\nM = number of sets formed by the 'N' elements\n";
+	cout << "Enter N:"; cin >> n;
+	cout << "Enter M:"; cin >> m; cout << "\n\n";
+	AdjMatrix obj(n, m);
+	obj.addVertices(); cout << "\n";
+	obj.dispADJ_Matrix();
+	obj.disp_list();
+
+	obj.allCheckINFO();
+
+	system("pause");
+	return 0;
+}
